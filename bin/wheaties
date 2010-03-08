@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.dirname(__FILE__) + "/../lib"
+begin
+  require "wheaties"
+  require "logger"
+rescue LoadError => e
+  if require "rubygems"
+    retry
+  else
+    raise e
+  end
+end
+
+EventMachine.run do
+  Wheaties.logger = Logger.new($stderr)
+  Wheaties.logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+end
