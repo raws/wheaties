@@ -15,4 +15,13 @@ end
 EventMachine.run do
   Wheaties.logger = Logger.new($stderr)
   Wheaties.logger.datetime_format = "%Y-%m-%d %H:%M:%S"
+  
+  Wheaties.connect("irc.doolanshire.net", 6667,
+                   :nick => "Bonerbot",
+                   :user => "wheaties")
+  
+  Signal.trap("INT") do
+    Wheaties::Connection.instance.close_connection_after_writing
+    EventMachine.stop_event_loop
+  end
 end
