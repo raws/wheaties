@@ -1,27 +1,11 @@
 #!/usr/bin/env ruby
 
-$:.unshift File.dirname(__FILE__) + "/../lib"
-begin
-  require "wheaties"
-  require "logger"
-rescue LoadError => e
-  if require "rubygems"
-    retry
-  else
-    raise e
-  end
-end
+commands = Dir[File.dirname(__FILE__) + "/wheaties-*"].map { |filename| filename[/-(.*)/, 1] }.sort
+command = ARGV[0]
 
-EventMachine.run do
-  Wheaties.logger = Logger.new($stderr)
-  Wheaties.logger.datetime_format = "%Y-%m-%d %H:%M:%S"
-  
-  Wheaties.connect("irc.doolanshire.net", 6667,
-                   :nick => "Bonerbot",
-                   :user => "wheaties")
-  
-  Signal.trap("INT") do
-    Wheaties::Connection.instance.close_connection_after_writing
-    EventMachine.stop_event_loop
-  end
+if commands.include?(command)
+  exec(File.dirname(__FILE__) + "/wheaties-#{command}", *ARGV[1..-1])
+else
+  $stderr.puts "usage: wheaties <#{commands.join(" | ")}> ..."
+  exit 1
 end

@@ -1,3 +1,5 @@
+require "set"
+
 require "eventmachine"
 
 require "wheaties/commands/channel"
@@ -15,11 +17,16 @@ require "wheaties/response"
 require "wheaties/user"
 
 module Wheaties
-  def self.connect(address, port = 6667, options = {})
-    EventMachine.connect(address, port, Connection, options)
-  end
+  class << self
+    def connect
+      address = Wheaties.config["server"]
+      port = (Wheaties.config["port"] || 6667).to_i
+      
+      EventMachine.connect(address, port, Connection)
+    end
   
-  def self.connection
-    Connection.instance
+    def connection
+      Connection.instance
+    end
   end
 end

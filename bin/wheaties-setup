@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require "pathname"
+require "fileutils"
+
+include FileUtils::Verbose
+
+def setup(name)
+  path = Pathname.new("#{name.gsub(/\.wheaties$/, "")}.wheaties")
+  mkdir_p path
+  
+  mkdir_p path.join("config")
+  mkdir_p path.join("log")
+  touch path.join("log/wheaties.log")
+  touch path.join("init.rb")
+  
+  unless File.exists?(path.join("config/irc.yml"))
+    File.open(path.join("config/irc.yml"), "w") do |f|
+      f.puts <<-EOS
+---
+server: irc.example.net
+# pass: secret
+nick: Wheaties
+user: wheaties
+real: Botfast of Champions
+channels:
+  - "#wheaties"
+log: info
+      EOS
+    end
+  end
+end
+
+if name = ARGV[0]
+  setup name
+else
+  $stderr.puts "usage: wheaties setup <name>"
+  exit 1
+end

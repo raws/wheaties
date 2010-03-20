@@ -4,11 +4,20 @@ module Wheaties
     
     attr_reader :nick, :user, :host
     
-    def initialize(hostmask)
-      if hostmask =~ /^ *([^ ]+)!([^ ]+)@([^ ]+)/
-        @nick, @user, @host = *$~[1..3]
+    def initialize(args)
+      case args
+      when String
+        if args =~ /^ *([^ ]+)!([^ ]+)@([^ ]+)/
+          @nick, @user, @host = *$~[1..3]
+        else
+          raise ErroneousHostmask, args
+        end
+      when Hash
+        @nick = args[:nick]
+        @user = args[:user]
+        @host = args[:host]
       else
-        raise ErroneousHostmask, hostmask
+        raise ErroneousHostmask, args
       end
     end
     

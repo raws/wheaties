@@ -1,7 +1,7 @@
 module Wheaties
   class Connection < EventMachine::Protocols::LineAndTextProtocol
-    attr_reader :options, :nick, :user, :real, :pass, :channels
-    attr_accessor :connected
+    attr_reader :nick, :user, :real, :pass
+    attr_accessor :connected, :channels
     
     class << self
       def instance
@@ -9,16 +9,15 @@ module Wheaties
       end
     end
     
-    def initialize(options)
+    def initialize
       @@instance = self
       
       @connected = false
-      @options = options
-      @nick = options[:nick] || "Wheaties"
-      @user = options[:user] || "wheaties"
-      @real = options[:real] || "Wheaties"
-      @pass = options[:pass]
-      @channels = {}
+      @nick = Wheaties.config["nick"]
+      @user = Wheaties.config["user"]
+      @real = Wheaties.config["real"]
+      @pass = Wheaties.config["pass"]
+      @channels = Set.new
       
       super
     end
@@ -26,6 +25,15 @@ module Wheaties
     def post_init
       log(:info, "Connection opened")
       
+      Signal.trap("INT") do
+        close_connection_after_writing
+        EM.stop_event_loop
+      end
+      
+      identify
+    end
+    
+    def identify
       broadcast("PASS", pass) if pass
       broadcast("NICK", nick)
       broadcast("USER", user, "0", "*", :text => real)
@@ -68,13 +76,6 @@ module Wheaties
     
     def connected?
       @connected
-    end
-    
-    def channel(name)
-      name.downcase!
-      channels.fetch(name) do |name|
-        channels[name] = Channel.new(name)
-      end
     end
   end
 end

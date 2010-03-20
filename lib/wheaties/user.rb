@@ -1,24 +1,18 @@
-require "set"
-
 module Wheaties
   class User
     include Comparable
     
     attr_reader :hostmask, :modes
     
-    def initialize(response)
-      if response.command == "352" && response.args.size >= 7
-        source = response.args.dup
-        nick = source[4]
-        user = source[1]
-        host = source[2]
-        modes = source[5][/^([GH])(.*)$/, 2].split("")
-        real = source[6][/^[0-9] +(.*)$/, 1]
-        
-        @hostmask = Hostmask.new("#{nick}!#{user}@#{host}")
-        @modes = Set.new(modes)
+    def initialize(args)
+      if args.is_a?(Hostmask)
+        @hostmask = args
+        @modes = Set.new
       else
-        raise ErroneousWhoResponse, response
+        @hostmask = Hostmask.new(:nick => args[:nick],
+                                 :user => args[:user],
+                                 :host => args[:host])
+        @modes = Set.new(args[:modes])
       end
     end
     
@@ -36,6 +30,38 @@ module Wheaties
     
     def <=>(other)
       self.hostmask <=> other.hostmask
+    end
+    
+    def to_s
+      hostmask.to_s
+    end
+    
+    class << self
+      def all
+        Channel.all.inject(Set.new) do |users, channel|
+          users.merge(channel.users)
+        end
+      end
+      
+      def find(args)
+        all.find do |user|
+          if args.is_a?(Hostmask)
+            user.hostmask == args
+          else
+            args.inject(true) do |result, arg|
+              result && (user.send(arg[0]) == arg[1])
+            end
+          end
+        end
+      end
+      
+      def create(args)
+        new(args)
+      end
+      
+      def find_or_create(args)
+        find(args) || create(args)
+      end
     end
   end
 end  

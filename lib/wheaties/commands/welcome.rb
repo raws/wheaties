@@ -8,7 +8,7 @@ module Wheaties
         Proc.new do
           connected = true
           
-          channels = %w(##)
+          channels = Wheaties.config["channels"]
           channels.each do |channel|
             broadcast(:join, channel)
           end
