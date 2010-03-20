@@ -39,12 +39,6 @@ module Wheaties
                                    :modes => modes)
         Wheaties::Channel.find_or_create(channel) << user
       end
-      
-      # RPL_ENDOFWHO
-      def on_315
-        channel = Wheaties::Channel.find(response.args.first)
-        log(:debug, "#{channel} has #{channel.users.size} users")
-      end
     end
   end
 end
