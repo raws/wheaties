@@ -2,7 +2,8 @@ module Wheaties
   class Hostmask
     include Comparable
     
-    attr_reader :nick, :user, :host
+    attr_reader :user, :host
+    attr_accessor :nick
     
     def initialize(args)
       case args

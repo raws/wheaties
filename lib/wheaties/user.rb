@@ -20,6 +20,10 @@ module Wheaties
       hostmask.nick
     end
     
+    def nick=(nick)
+      hostmask.nick = nick
+    end
+    
     def user
       hostmask.user
     end

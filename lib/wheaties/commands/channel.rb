@@ -25,6 +25,12 @@ module Wheaties
         end
       end
       
+      def on_nick
+        user = User.find_or_create(response.sender)
+        nick = response.args.first
+        user.nick = nick
+      end
+      
       # RPL_WHOREPLY
       def on_352
         channel = response.args.first
