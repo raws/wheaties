@@ -1,22 +1,17 @@
 module Wheaties
   class Connection < EventMachine::Protocols::LineAndTextProtocol
-    attr_reader :nick, :user, :real, :pass
-    attr_accessor :connected, :channels
+    attr_reader :nick, :user, :real, :channels
     
     class << self
-      def instance
-        @@instance
-      end
+      attr_accessor :instance
     end
     
     def initialize
-      @@instance = self
+      Connection.instance = self
       
-      @connected = false
       @nick = Wheaties.config["nick"]
       @user = Wheaties.config["user"]
       @real = Wheaties.config["real"]
-      @pass = Wheaties.config["pass"]
       @channels = Set.new
       
       super
@@ -26,14 +21,18 @@ module Wheaties
       log(:info, "Connection opened")
       
       Signal.trap("INT") do
+        @should_shut_down = true
         close_connection_after_writing
         EM.stop_event_loop
       end
+      
+      set_comm_inactivity_timeout((Wheaties.config["timeout"] || 300).to_i)
       
       identify
     end
     
     def identify
+      pass = Wheaties.config["pass"]
       broadcast("PASS", pass) if pass
       broadcast("NICK", nick)
       broadcast("USER", user, "0", "*", :text => real)
@@ -58,11 +57,18 @@ module Wheaties
     end
     
     def unbind
-      log(:info, "Connection closed")
+      if error? && !@should_shut_down
+        log(:info, "Connection timed out. Reconnecting...")
+        sleep 5
+        Wheaties.connect
+      else
+        log(:info, "Connection closed")
+        EM.stop_event_loop
+      end
     end
     
     def broadcast(command, *args)
-      @sender ||= EventMachine.spawn do |command, *args|
+      @sender ||= EM.spawn do |command, *args|
         connection = Connection.instance
         request = Request.new(command, *args)
         connection.send_data(request.to_s)
@@ -72,10 +78,6 @@ module Wheaties
     
     def log(level, *args)
       Wheaties.logger.send(level, args.join(" "))
-    end
-    
-    def connected?
-      @connected
     end
   end
 end

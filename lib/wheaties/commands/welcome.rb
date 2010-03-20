@@ -5,13 +5,9 @@ module Wheaties
       def on_376
         log(:debug, "Connection established")
         
-        Proc.new do
-          connected = true
-          
-          channels = Wheaties.config["channels"]
-          channels.each do |channel|
-            broadcast(:join, channel)
-          end
+        channels = Wheaties.config["channels"]
+        channels.each do |channel|
+          broadcast(:join, channel)
         end
       end
       
