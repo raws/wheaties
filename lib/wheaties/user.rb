@@ -6,7 +6,7 @@ module Wheaties
     
     def initialize(args)
       if args.is_a?(Hostmask)
-        @hostmask = args
+        @hostmask = args.dup
         @modes = Set.new
       else
         @hostmask = Hostmask.new(:nick => args[:nick],
