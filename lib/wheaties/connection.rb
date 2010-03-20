@@ -29,6 +29,7 @@ module Wheaties
       set_comm_inactivity_timeout((Wheaties.config["timeout"] || 300).to_i)
       
       identify
+      add_periodic_who
     end
     
     def identify
@@ -36,6 +37,14 @@ module Wheaties
       broadcast("PASS", pass) if pass
       broadcast("NICK", nick)
       broadcast("USER", user, "0", "*", :text => real)
+    end
+    
+    def add_periodic_who
+      EM.add_periodic_timer(600) do
+        Channel.all.each do |channel|
+          broadcast(:who, channel)
+        end
+      end
     end
     
     def receive_line(line)
