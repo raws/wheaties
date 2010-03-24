@@ -2,9 +2,9 @@ require "set"
 
 require "eventmachine"
 
-require "wheaties/commands/channel"
-require "wheaties/commands/ping"
-require "wheaties/commands/welcome"
+require "wheaties/responses/channel"
+require "wheaties/responses/ping"
+require "wheaties/responses/welcome"
 
 require "wheaties/channel"
 require "wheaties/connection"

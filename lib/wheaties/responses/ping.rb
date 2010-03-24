@@ -1,7 +1,7 @@
 module Wheaties
-  module Commands
+  module Responses
     module Ping
-      def on_ping
+      def wheaties_on_ping
         broadcast(:pong, :text => response.text)
       end
     end

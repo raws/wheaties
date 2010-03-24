@@ -1,7 +1,7 @@
 module Wheaties
-  module Commands
+  module Responses
     module Channel
-      def on_join
+      def wheaties_on_join
         channel = Wheaties::Channel.find_or_create(response.args.first)
         
         if response.sender.nick == connection.nick
@@ -13,7 +13,7 @@ module Wheaties
         end
       end
       
-      def on_part
+      def wheaties_on_part
         channel = Wheaties::Channel.find(response.args.first)
         
         if response.sender.nick == connection.nick
@@ -25,14 +25,14 @@ module Wheaties
         end
       end
       
-      def on_nick
+      def wheaties_on_nick
         user = User.find_or_create(response.sender)
         nick = response.args.first
         user.nick = nick
       end
       
       # RPL_WHOREPLY
-      def on_352
+      def wheaties_on_352
         channel = response.args.first
         nick = response.args[4]
         user = response.args[1]

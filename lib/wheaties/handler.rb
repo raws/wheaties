@@ -1,8 +1,8 @@
 module Wheaties
   class Handler
-    include Commands::Channel
-    include Commands::Ping
-    include Commands::Welcome
+    include Responses::Channel
+    include Responses::Ping
+    include Responses::Welcome
     
     attr_reader :connection, :response
     
@@ -12,6 +12,7 @@ module Wheaties
     end
     
     def handle
+      send(response.wheaties_method_name) if respond_to?(response.wheaties_method_name)
       send(response.method_name) if respond_to?(response.method_name)
     end
     
