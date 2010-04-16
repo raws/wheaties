@@ -83,12 +83,12 @@ module Wheaties
     end
     
     def broadcast(command, *args)
-      @sender ||= EM.spawn do |command, *args|
+      (@sender ||= EM.spawn do |command, *args|
         connection = Connection.instance
         request = Request.new(command, *args)
         connection.send_data(request.to_s)
         connection.log(:debug, "-->", request.to_s.inspect) unless request.sensitive?
-      end.notify(command, *args)
+      end).notify(command, *args)
     end
     
     def log(level, *args)
