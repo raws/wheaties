@@ -1,9 +1,10 @@
 require "pathname"
 require "logger"
+require "yaml"
 
 module Wheaties
   class << self
-    attr_accessor :lib, :root, :config
+    attr_accessor :lib, :root, :config, :handlers
     
     def start
       load_root
@@ -33,8 +34,14 @@ module Wheaties
     end
     
     def load_application
+      Wheaties.handlers = []
+      
       $:.unshift Wheaties.root.join("lib")
       load Wheaties.root.join("init.rb")
+    end
+    
+    def register(klass)
+      Wheaties.handlers << klass
     end
   end
   

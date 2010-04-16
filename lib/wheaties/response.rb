@@ -12,10 +12,6 @@ module Wheaties
       "on_#{command.downcase}"
     end
     
-    def wheaties_method_name
-      "wheaties_#{method_name}"
-    end
-    
     protected
       def parse
         source = line.dup

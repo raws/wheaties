@@ -1,9 +1,5 @@
 module Wheaties
   class Handler
-    include Responses::Channel
-    include Responses::Ping
-    include Responses::Welcome
-    
     attr_reader :connection, :response
     
     def initialize(response)
@@ -12,7 +8,6 @@ module Wheaties
     end
     
     def handle
-      send(response.wheaties_method_name) if respond_to?(response.wheaties_method_name)
       send(response.method_name) if respond_to?(response.method_name)
     end
     
@@ -24,5 +19,21 @@ module Wheaties
       def broadcast(command, *args)
         connection.broadcast(command, *args)
       end
+  end
+  
+  class WheatiesHandler < Handler
+    include Responses::Channel
+    include Responses::Ping
+    include Responses::Welcome
+    
+    alias :original_handle :handle
+    
+    def handle
+      original_handle
+      
+      Wheaties.handlers.each do |klass|
+        handler = klass.new(response).handle
+      end
+    end
   end
 end

@@ -4,6 +4,12 @@ module Wheaties
     
     class << self
       attr_accessor :instance
+      
+      def method_missing(method, *args)
+        self.instance.send(method, *args)
+      rescue NoMethodError => e
+        raise e
+      end
     end
     
     def initialize
@@ -52,7 +58,7 @@ module Wheaties
         begin
           response = Response.new(line)
           log(:debug, "<--", response.to_s.inspect)
-          Handler.new(response).handle
+          WheatiesHandler.new(response).handle
         rescue => e
           log(:error, e.message, e.backtrace)
         end
