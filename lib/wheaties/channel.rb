@@ -26,6 +26,8 @@ module Wheaties
     end
     
     class << self
+      include Wheaties::Normalize
+      
       def all
         Connection.instance.channels
       end
@@ -49,10 +51,6 @@ module Wheaties
       
       def delete(channel)
         Channel.all.delete(channel)
-      end
-      
-      def normalize(name)
-        name.downcase
       end
     end
   end

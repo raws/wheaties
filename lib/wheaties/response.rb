@@ -6,6 +6,7 @@ module Wheaties
     def initialize(line)
       @line = line
       parse
+      modulize
     end
     
     def method_name
@@ -32,6 +33,13 @@ module Wheaties
         end
       end
       
+      def modulize
+        module_name = "On#{command.capitalize}"
+        if ResponseTypes.const_defined?(module_name)
+          self.class.class_eval { include ResponseTypes.const_get(module_name) }
+        end
+      end
+      
       def extract!(line, regex, default = nil)
         result = nil
         line.gsub!(regex) do |match|
@@ -40,5 +48,19 @@ module Wheaties
         end
         result || default
       end
+  end
+  
+  module ResponseTypes
+    module OnPrivmsg
+      include Wheaties::Normalize
+      
+      def channel
+        normalize(args.first)
+      end
+      
+      def pm?
+        channel == sender.nick
+      end
+    end
   end
 end
