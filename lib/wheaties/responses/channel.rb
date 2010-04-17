@@ -45,6 +45,10 @@ module Wheaties
                                    :modes => modes)
         Wheaties::Channel.find_or_create(channel) << user
       end
+      
+      def on_action
+        log(:debug, "#{response.sender.nick} sent an action: #{response.text.inspect}")
+      end
     end
   end
 end

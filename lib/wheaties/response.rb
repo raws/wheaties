@@ -19,6 +19,17 @@ module Wheaties
         @sender = extract!(source, /^ *:([^ ]+)/)
         @command = extract!(source, /^ *([^ ]+)/, "").upcase
         @text = extract!(source, / :(.*)$/)
+        
+        if @text =~ /^\001([^\001]+)\001$/
+          @command = "CTCP"
+          @text = $~[1]
+          
+          if @text =~ /^ACTION\s+(.*)$/i
+            @command = "ACTION"
+            @text = $~[1]
+          end
+        end
+        
         @args = source.strip.split(" ")
         @args.shift if @args.first == Connection.instance.nick
         
@@ -61,6 +72,24 @@ module Wheaties
       def pm?
         channel == sender.nick
       end
+    end
+    
+    module OnCtcp
+      def ctcp_command
+        parse_ctcp
+        @ctcp_command
+      end
+      
+      def ctcp_args
+        parse_ctcp
+        @ctcp_args
+      end
+      
+      private
+        def parse_ctcp
+          @ctcp_args = text.strip.split(" ") unless @ctcp_args
+          @ctcp_command = @ctcp_args.shift unless @ctcp_command
+        end
     end
   end
 end
