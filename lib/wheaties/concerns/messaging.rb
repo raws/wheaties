@@ -14,6 +14,10 @@ module Wheaties
       end
       
       protected
+        def broadcast(command, *args)
+          Connection.broadcast(command, *args)
+        end
+        
         def broadcast_ctcp(recipient, command, *args)
           broadcast(:privmsg, recipient, :text => "\001#{command.to_s.upcase} #{args.join(" ")}\001")
         end
