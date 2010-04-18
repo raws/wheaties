@@ -75,6 +75,8 @@ module Wheaties
     end
     
     module OnCtcp
+      include OnPrivmsg
+      
       def ctcp_command
         parse_ctcp
         @ctcp_command
