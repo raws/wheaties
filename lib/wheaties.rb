@@ -2,11 +2,13 @@ require "set"
 
 require "eventmachine"
 
+require "wheaties/concerns/messaging"
+require "wheaties/concerns/normalization"
+
 require "wheaties/responses/channel"
 require "wheaties/responses/ping"
 require "wheaties/responses/welcome"
 
-require "wheaties/normalize"
 require "wheaties/channel"
 require "wheaties/connection"
 require "wheaties/errors"

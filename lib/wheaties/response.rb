@@ -63,7 +63,7 @@ module Wheaties
   
   module ResponseTypes
     module OnPrivmsg
-      include Wheaties::Normalize
+      include Wheaties::Concerns::Normalization
       
       def channel
         normalize(args.first)

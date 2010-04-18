@@ -26,7 +26,7 @@ module Wheaties
     end
     
     class << self
-      include Wheaties::Normalize
+      include Wheaties::Concerns::Normalization
       
       def all
         Connection.instance.channels

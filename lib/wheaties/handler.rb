@@ -1,5 +1,7 @@
 module Wheaties
   class Handler
+    include Wheaties::Concerns::Messaging
+    
     attr_reader :connection, :response
     
     def initialize(response)
