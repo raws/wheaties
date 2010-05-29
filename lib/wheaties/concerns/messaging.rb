@@ -41,6 +41,8 @@ module Wheaties
           message.each do |line|
             yield line.to_s
           end
+          
+          return nil
         end
     end
   end
