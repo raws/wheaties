@@ -2,13 +2,13 @@ module Wheaties
   module Concerns
     module Messaging
       def privmsg(message, *recipients)
-        ircify(message, *recipients) do |message, recipients|
+        ircify(message) do |message|
           broadcast(:privmsg, recipients.join(" "), :text => message)
         end
       end
       
       def notice(message, *recipients)
-        ircify(message, *recipients) do |message, recipients|
+        ircify(message) do |message|
           broadcast(:notice, recipients.join(" "), :text => message)
         end
       end
@@ -26,7 +26,7 @@ module Wheaties
           broadcast(:privmsg, recipient, :text => "\001#{command.to_s.upcase} #{args.join(" ")}\001")
         end
         
-        def ircify(message, *recipients, &block)
+        def ircify(message, &block)
           case message
           when String
             message = message.split(/[\r\n]+/)
@@ -39,7 +39,7 @@ module Wheaties
           end
           
           message.each do |line|
-            yield line, *recipients
+            yield line.to_s
           end
         end
     end
