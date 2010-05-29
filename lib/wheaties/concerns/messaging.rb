@@ -2,11 +2,15 @@ module Wheaties
   module Concerns
     module Messaging
       def privmsg(message, *recipients)
-        broadcast(:privmsg, recipients.join(" "), :text => message)
+        ircify(message, *recipients) do |message, recipients|
+          broadcast(:privmsg, recipients.join(" "), :text => message)
+        end
       end
       
       def notice(message, *recipients)
-        broadcast(:notice, recipients.join(" "), :text => message)
+        ircify(message, *recipients) do |message, recipients|
+          broadcast(:notice, recipients.join(" "), :text => message)
+        end
       end
       
       def action(message, recipient)
@@ -20,6 +24,23 @@ module Wheaties
         
         def broadcast_ctcp(recipient, command, *args)
           broadcast(:privmsg, recipient, :text => "\001#{command.to_s.upcase} #{args.join(" ")}\001")
+        end
+        
+        def ircify(message, *recipients, &block)
+          case message
+          when String
+            message = message.split(/[\r\n]+/)
+          when Array
+            message = message.map do |line|
+              line.split(/[\r\n]+/)
+            end.flatten
+          else
+            return
+          end
+          
+          message.each do |line|
+            yield line, *recipients
+          end
         end
     end
   end
