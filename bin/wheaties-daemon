@@ -8,6 +8,4 @@ if fork
   EventMachine.run do
     Wheaties.connect
   end
-else
-  exec "tail -n 0 -f #{Wheaties.root.join("log/wheaties.log")}"
 end
