@@ -29,10 +29,10 @@ module Wheaties
         def ircify(message, &block)
           case message
           when String
-            message = message.split(/[\r\n]+/)
+            message = message.split(/[\r\n]/)
           when Array
             message = message.map do |line|
-              line.split(/[\r\n]+/)
+              line.split(/[\r\n]/)
             end.flatten
           else
             return
