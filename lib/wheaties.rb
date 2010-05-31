@@ -2,6 +2,7 @@ require "set"
 
 require "eventmachine"
 
+require "wheaties/concerns/logging"
 require "wheaties/concerns/messaging"
 require "wheaties/concerns/normalization"
 
