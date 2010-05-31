@@ -4,10 +4,11 @@ require File.dirname(__FILE__) + "/../lib/wheaties/boot"
 Wheaties.start
 
 if fork
+  exec "tail -n 0 -f #{Wheaties.root.join("log/wheaties.log")}"
+else
   sleep 0.01
   EventMachine.run do
     Wheaties.connect
   end
-else
-  exec "tail -n 0 -f #{Wheaties.root.join("log/wheaties.log")}"
+  Process.wait
 end
