@@ -5,6 +5,13 @@ module Wheaties
       def on_376
         log(:debug, "Connection established")
         
+        performs = Wheaties.config["auto"]
+        performs.each do |command|
+          if command =~ /^(.*?)\s+(.*)$/
+            broadcast($~[1], $~[2])
+          end
+        end
+        
         channels = Wheaties.config["channels"]
         channels.each do |channel|
           broadcast(:join, channel)
