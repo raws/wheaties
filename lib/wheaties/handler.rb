@@ -1,5 +1,6 @@
 module Wheaties
   class Handler
+    include Wheaties::Concerns::Logging
     include Wheaties::Concerns::Messaging
     
     attr_reader :connection, :response
@@ -14,10 +15,6 @@ module Wheaties
     end
     
     protected
-      def log(level, *args)
-        connection.log(level, *args)
-      end
-      
       def broadcast(command, *args)
         connection.broadcast(command, *args)
       end
