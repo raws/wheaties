@@ -1,5 +1,6 @@
 module Wheaties
   class Handler
+    include Wheaties::Concerns::Formatting
     include Wheaties::Concerns::Logging
     include Wheaties::Concerns::Messaging
     
