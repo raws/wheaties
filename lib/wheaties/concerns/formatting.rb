@@ -51,6 +51,8 @@ module Wheaties
         define_method(name) { color(name) }
       end
       
+      def colors; COLORS.keys; end
+      
       def plain; PLAIN; end
       alias_method :pl, :plain
       
