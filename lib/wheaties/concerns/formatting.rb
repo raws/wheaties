@@ -43,7 +43,7 @@ module Wheaties
         back = back.to_sym if back
         fore = :black unless COLORS.include?(fore)
         back = :white unless back.nil? || COLORS.include?(back)
-        "#{COLOR}#{COLORS[fore]}#{back ? ("," + back) : ""}"
+        "#{COLOR}#{COLORS[fore]}#{back ? ("," + COLORS[back]) : ""}"
       end
       alias_method :c, :color
       
