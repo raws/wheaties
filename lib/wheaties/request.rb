@@ -13,7 +13,7 @@ module Wheaties
     end
     
     def sensitive?
-      command.downcase == "pass"
+      %w(pass oper).include?(command.downcase)
     end
     
     def to_s
