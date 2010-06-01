@@ -66,7 +66,7 @@ module Wheaties
       include Wheaties::Concerns::Normalization
       
       def channel
-        normalize(args.first)
+        @channel ||= normalize(args.first) == text ? sender.nick : normalize(args.first)
       end
       
       def pm?
