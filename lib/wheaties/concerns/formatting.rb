@@ -47,6 +47,9 @@ module Wheaties
       end
       alias_method :c, :color
       
+      def uncolor; UNCOLOR; end
+      alias_method :uc, :uncolor
+      
       COLORS.each do |name, code|
         define_method(name) { color(name) }
       end
