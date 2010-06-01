@@ -39,6 +39,8 @@ module Wheaties
       }
       
       def color(fore, back = nil)
+        fore = fore.to_sym
+        back = back.to_sym if back
         fore = :black unless COLORS.include?(fore)
         back = :white unless back.nil? || COLORS.include?(back)
         "#{COLOR}#{COLORS[fore]}#{back ? ("," + back) : ""}"
