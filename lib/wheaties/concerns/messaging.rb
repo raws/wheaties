@@ -2,15 +2,11 @@ module Wheaties
   module Concerns
     module Messaging
       def privmsg(message, *recipients)
-        ircify(message) do |message|
-          broadcast(:privmsg, recipients.join(" "), :text => message)
-        end
+        broadcast_message(:privmsg, message, recipients)
       end
       
       def notice(message, *recipients)
-        ircify(message) do |message|
-          broadcast(:notice, recipients.join(" "), :text => message)
-        end
+        broadcast_message(:notice, message, recipients)
       end
       
       def action(message, recipient)
@@ -23,26 +19,32 @@ module Wheaties
         end
         
         def broadcast_ctcp(recipient, command, *args)
-          broadcast(:privmsg, recipient, :text => "\001#{command.to_s.upcase} #{args.join(" ")}\001")
+          max_length = max_length(:privmsg, recipient) - (3 + command.to_s.length)
+          broadcast(:privmsg, recipient, :text => "\001#{command.to_s.upcase} #{args.join(" ")[0, max_length]}\001")
         end
         
-        def ircify(message, &block)
+        def broadcast_message(command, message, recipients)
           case message
           when String
-            message = message.split(/[\r\n]/)
+            lines = message.split(/[\r\n]/)
           when Array
-            message = message.map do |line|
+            lines = message.map do |line|
               line.to_s.split(/[\r\n]/)
             end.flatten
           else
             return
           end
           
-          message.each do |line|
-            yield line.to_s
+          lines.each do |line|
+            broadcast(command, recipients.join(" "), :text => message)
           end
           
           return nil
+        end
+        
+        def max_length(command, *args)
+          request = Request.new(command, *args)
+          512 - (request.to_s.length + 2)
         end
     end
   end
