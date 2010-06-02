@@ -24,8 +24,6 @@ module Wheaties
     end
     
     def post_init
-      log(:info, "Connection opened")
-      
       Signal.trap("INT") do
         @should_shut_down = true
         close_connection_after_writing
@@ -33,6 +31,13 @@ module Wheaties
       end
       
       set_comm_inactivity_timeout((Wheaties.config["timeout"] || 300).to_i)
+      
+      if Wheaties.config["ssl"] === true
+        start_tls
+        log(:info, "SSL connection opened")
+      else
+        log(:info, "Connection opened")
+      end
       
       identify
       add_periodic_who
