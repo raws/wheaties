@@ -10,7 +10,7 @@ module Wheaties
           if command =~ /^(.*?)\s+(.*)$/
             broadcast($~[1], $~[2])
           end
-        end
+        end if performs
         
         channels = Wheaties.config["channels"]
         channels.each do |channel|
