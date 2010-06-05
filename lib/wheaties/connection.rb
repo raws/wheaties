@@ -65,7 +65,7 @@ module Wheaties
           log(:debug, "<--", response.to_s.inspect)
           WheatiesHandler.new(response).handle
         rescue => e
-          log(:error, e.message, e.backtrace)
+          log(:error, e.message, e.backtrace.join("\n"))
         end
       end
       
