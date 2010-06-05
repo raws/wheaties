@@ -1,6 +1,14 @@
 require "set"
 
-require "eventmachine"
+begin
+  require "eventmachine"
+rescue LoadError => e
+  if require "rubygems"
+    retry
+  else
+    raise e
+  end
+end
 
 require "wheaties/concerns/formatting"
 require "wheaties/concerns/logging"
