@@ -26,7 +26,7 @@ module Wheaties
       end
       
       def on_nick
-        user = User.find_or_create(response.sender)
+        user = User.find_or_create(:nick => response.sender.nick)
         nick = response.args.first
         user.nick = nick
       end

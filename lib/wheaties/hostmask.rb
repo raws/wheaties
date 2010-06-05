@@ -11,7 +11,7 @@ module Wheaties
         if args =~ /^ *([^ ]+)!([^ ]+)@([^ ]+)/
           @nick, @user, @host = *$~[1..3]
         else
-          raise ErroneousHostmask, args
+          @nick = args
         end
       when Hash
         @nick = args[:nick]
