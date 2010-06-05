@@ -93,5 +93,15 @@ module Wheaties
           @ctcp_command = @ctcp_args.shift unless @ctcp_command
         end
     end
+    
+    module OnNick
+      def old_nick
+        sender.nick
+      end
+      
+      def new_nick
+        args.first
+      end
+    end
   end
 end

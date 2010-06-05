@@ -26,9 +26,8 @@ module Wheaties
       end
       
       def on_nick
-        user = User.find_or_create(:nick => response.sender.nick)
-        nick = response.args.first
-        user.nick = nick
+        user = User.find(:nick => response.old_nick)
+        user.nick = response.new_nick if user
       end
       
       # RPL_WHOREPLY
