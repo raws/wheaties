@@ -2,7 +2,7 @@ module Wheaties
   module Responses
     module Channel
       def on_join
-        channel = Wheaties::Channel.find_or_create(response.args.first)
+        channel = response.channel
         
         if response.sender.nick == connection.nick
           broadcast(:who, channel)
@@ -14,7 +14,7 @@ module Wheaties
       end
       
       def on_part
-        channel = Wheaties::Channel.find(response.args.first)
+        channel = response.channel
         
         if response.sender.nick == connection.nick
           Wheaties::Channel.delete(channel)

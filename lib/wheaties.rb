@@ -19,6 +19,7 @@ require "wheaties/hostmask"
 require "wheaties/logging"
 require "wheaties/request"
 require "wheaties/response"
+require "wheaties/response_types"
 require "wheaties/user"
 
 module Wheaties
