@@ -10,7 +10,7 @@ module Wheaties
     end
     
     def method_name
-      "on_#{command.downcase}"
+      :"on_#{command.downcase}"
     end
     
     protected
