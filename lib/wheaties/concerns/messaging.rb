@@ -36,7 +36,7 @@ module Wheaties
           when String
             lines = message.split(/[\r\n]/)
           when Array
-            lines = message.map do |line|
+            lines = message.flatten.map do |line|
               line.to_s.split(/[\r\n]/)
             end.flatten
           else
