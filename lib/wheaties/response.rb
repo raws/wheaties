@@ -31,7 +31,6 @@ module Wheaties
         end
         
         @args = source.strip.split(" ")
-        @args.shift if @args.first == Connection.instance.nick
         
         begin
           @sender = @sender.to_hostmask if @sender

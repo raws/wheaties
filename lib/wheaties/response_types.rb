@@ -3,16 +3,16 @@ module Wheaties
     module OnPrivmsg
       include Wheaties::Concerns::Normalization
       
+      def from
+        self.pm? ? sender.nick : channel.name
+      end
+      
       def channel
-        @channel ||= if normalize(args.first) == text
-                       User.find(sender)
-                     else
-                       Channel.find_or_create(args.first)
-                     end
+        Channel.find_or_create(args.first) unless pm?
       end
       
       def pm?
-        channel == sender.nick
+        args.first == Connection.nick
       end
     end
     
