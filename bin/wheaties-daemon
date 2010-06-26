@@ -10,5 +10,4 @@ rescue LoadError => e
   end
 end
 
-Daemons.run File.join(File.dirname(__FILE__), "wheaties-start"),
-            :multiple => true
+Daemons.run File.join(File.dirname(__FILE__), "wheaties-start"), :multiple => true
