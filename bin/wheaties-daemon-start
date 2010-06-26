@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require File.join(File.dirname(__FILE__), "..", "lib", "wheaties", "boot")
+Wheaties.start
+
+sleep 0.01
+
+EventMachine.run do
+  Wheaties.connect
+end
