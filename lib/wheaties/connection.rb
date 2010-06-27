@@ -24,7 +24,7 @@ module Wheaties
     end
     
     def post_init
-      Signal.trap("INT") do
+      Signal.trap("TERM") do
         @should_shut_down = true
         close_connection_after_writing
         EM.stop_event_loop

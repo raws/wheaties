@@ -1,13 +1,61 @@
 #!/usr/bin/env ruby
 
-begin
-  require "daemons"
-rescue LoadError => e
-  if require "rubygems"
-    retry
-  else
-    raise e
-  end
+module Wheaties
+  module Daemon
+    class << self
+      def start
+        if pid = fork
+          write_pid_file(pid)
+        else
+          sleep 0.01
+          EventMachine.run do
+            Wheaties.connect
+          end
+        end
+      end
+      
+      def stop
+        if pid = read_pid_file
+          begin
+            Process.kill("TERM", pid)
+          rescue; end
+          File.delete(pid_file_path)
+        end
+      end
+      
+      def pid_file_path
+        Wheaties.root.join("log/wheaties.pid")
+      end
+      
+      def read_pid_file
+        if File.exist?(pid_file_path) && File.readable?(pid_file_path)
+          open(pid_file_path) do |f|
+            f.gets.to_i
+          end
+        end
+      end
+      
+      def write_pid_file(pid)
+        open(pid_file_path, "w") do |f|
+          f.puts pid
+        end
+      end
+    end # class << self
+  end # Daemon
 end
 
-Daemons.run File.join(File.dirname(__FILE__), "wheaties-start"), :multiple => true
+require File.dirname(__FILE__) + "/../lib/wheaties/boot"
+Wheaties.start
+
+case command = ARGV[0]
+when "start"
+  Wheaties::Daemon.start
+when "stop"
+  Wheaties::Daemon.stop
+when "restart"
+  Wheaties::Daemon.stop
+  Wheaties::Daemon.start
+else
+  $stderr.puts "usage: wheaties daemon <start | stop | restart>"
+  exit 1
+end
