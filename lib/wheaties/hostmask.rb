@@ -27,7 +27,7 @@ module Wheaties
     end
     
     def <=>(other)
-      self.to_s <=> other.to_s
+      self.to_s.downcase <=> other.to_s.downcase
     end
   end
 end

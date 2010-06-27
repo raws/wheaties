@@ -47,14 +47,12 @@ module Wheaties
         end
       end
       
-      def find(args)
+      def find(query)
         all.find do |user|
-          if args.is_a?(Hostmask)
-            user.hostmask == args
-          else
-            args.inject(true) do |result, arg|
-              result && (user.send(arg[0]) == arg[1])
-            end
+          case query
+          when String then user.nick == query
+          when Hash then user.nick == query[:nick]
+          when Hostmask then user.hostmask == query
           end
         end
       end
