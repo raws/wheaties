@@ -1,10 +1,11 @@
 module Wheaties
   class Response
-    attr_reader :line, :sender, :command, :args, :text
+    attr_reader :line, :sender, :command, :args, :text, :time
     alias_method :to_s, :line
     
     def initialize(line)
       @line = line
+      @time = Time.now
       parse
       modulize
     end
