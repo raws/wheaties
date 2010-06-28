@@ -38,35 +38,57 @@ module Wheaties
         :silver => "15"
       }
       
-      def color(fore, back = nil)
+      def color(fore, back = nil, text = nil)
         fore = fore.to_sym
-        back = back.to_sym if back
+        back = back.to_sym if back && !back.empty?
         fore = :black unless COLORS.include?(fore)
-        back = :white unless back.nil? || COLORS.include?(back)
-        "#{COLOR}#{COLORS[fore]}#{back ? ("," + COLORS[back]) : ""}"
+        back = :white unless back.nil? || back.empty? || COLORS.include?(back)
+        result = "#{COLOR}#{COLORS[fore]}#{back.nil? || back.empty? ? "" : ("," + COLORS[back])}"
+        result += text + uncolor unless text.nil? || text.empty?
       end
       alias_method :c, :color
       
-      def uncolor; UNCOLOR; end
+      def uncolor(text = nil)
+        if text.nil? || text.empty?
+          UNCOLOR
+        else
+          text.gsub(/#{COLOR}\d{0,2},?\d{0,2}/, "")
+        end
+      end
       alias_method :uc, :uncolor
       
       COLORS.each do |name, code|
-        define_method(name) { color(name) }
+        define_method(name) do |*args|
+          text, = *args
+          color(name, nil, text)
+        end
       end
       
       def colors; COLORS.keys; end
       
-      def plain; PLAIN; end
+      def plain(text = nil)
+        if text.nil? || text.empty?
+          PLAIN
+        else
+          text.gsub(/[#{BOLD + ITALIC + UNDERLINE}]/, "")
+        end
+      end
       alias_method :pl, :plain
       
-      def bold; BOLD; end
+      def bold(text = nil)
+        "#{BOLD}#{text.nil? || text.empty? ? "" : text + plain}"
+      end
       alias_method :b, :bold
       
-      def italic; ITALIC; end
+      def italic(text = nil)
+        "#{ITALIC}#{text.nil? || text.empty? ? "" : text + plain}"
+      end
       alias_method :i, :italic
       alias_method :reverse, :italic
       
-      def underline; UNDERLINE; end
+      def underline(text = nil)
+        "#{UNDERLINE}#{text.nil? || text.empty? ? "" : text + plain}"
+      end
       alias_method :u, :underline
     end
   end
