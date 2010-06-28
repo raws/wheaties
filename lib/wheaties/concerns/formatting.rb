@@ -45,6 +45,7 @@ module Wheaties
         back = :white unless back.nil? || back.empty? || COLORS.include?(back)
         result = "#{COLOR}#{COLORS[fore]}#{back.nil? || back.empty? ? "" : ("," + COLORS[back])}"
         result += text + uncolor unless text.nil? || text.empty?
+        result
       end
       alias_method :c, :color
       
