@@ -1,5 +1,7 @@
 module Wheaties
   class Connection < EventMachine::Protocols::LineAndTextProtocol
+    include Wheaties::Concerns::Logging
+    
     attr_reader :nick, :user, :real, :channels
     
     class << self
@@ -95,9 +97,5 @@ module Wheaties
         connection.log(:debug, "-->", request.to_s.inspect) unless request.sensitive?
       end).notify(command, *args)
     end
-    
-    def log(level, *args)
-      Wheaties.logger.send(level, args.join(" "))
-    end
-  end
+  end # Connection
 end

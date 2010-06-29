@@ -2,8 +2,8 @@ module Wheaties
   module Concerns
     module Logging
       def log(level, *args)
-        Wheaties::Connection.instance.log(level, *args)
+        Wheaties.logger.send(level, args.join(" "))
       end
-    end
-  end
+    end # Logging
+  end # Concerns
 end

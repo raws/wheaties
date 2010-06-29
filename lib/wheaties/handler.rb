@@ -14,12 +14,7 @@ module Wheaties
     def handle
       send(response.method_name) if respond_to?(response.method_name)
     end
-    
-    protected
-      def broadcast(command, *args)
-        connection.broadcast(command, *args)
-      end
-  end
+  end # Handler
   
   class WheatiesHandler < Handler
     include Responses::Channel
@@ -35,5 +30,5 @@ module Wheaties
         handler = klass.new(response).handle
       end
     end
-  end
+  end # WheatiesHandler
 end
