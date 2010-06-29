@@ -14,6 +14,12 @@ module Wheaties
     def handle
       send(response.method_name) if respond_to?(response.method_name)
     end
+    
+    class << self
+      def handle(response)
+        new(response).handle
+      end
+    end
   end # Handler
   
   class WheatiesHandler < Handler
@@ -26,9 +32,11 @@ module Wheaties
     def handle
       original_handle
       
-      Wheaties.handlers.each do |klass|
-        handler = klass.new(response).handle
+      Wheaties.handlers.each do |handler|
+        EM.defer do
+          handler.handle(response)
+        end
       end
-    end
+    end # handle
   end # WheatiesHandler
 end

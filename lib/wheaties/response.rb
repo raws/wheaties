@@ -10,6 +10,11 @@ module Wheaties
       modulize
     end
     
+    def dup
+      @sender = sender.dup if @sender
+      super
+    end
+    
     def method_name
       :"on_#{command.downcase}"
     end

@@ -61,7 +61,7 @@ module Wheaties
     end
     
     def receive_line(line)
-      operator = Proc.new do
+      EM.defer do
         begin
           response = Response.new(line)
           log(:debug, "<--", response.to_s.inspect)
@@ -70,12 +70,6 @@ module Wheaties
           log(:error, e.message, e.backtrace.join("\n"))
         end
       end
-      
-      callback = Proc.new do |result|
-        instance_eval(&result) if result.is_a?(Proc)
-      end
-      
-      EM.defer(operator, callback)
     end
     
     def unbind

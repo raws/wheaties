@@ -42,8 +42,12 @@ module Wheaties
       load Wheaties.root.join("init.rb")
     end
     
-    def register(klass)
-      Wheaties.handlers << klass
+    def register(handler)
+      Wheaties.handlers << handler
+    end
+    
+    def unregister(handler)
+      Wheaties.handlers.delete(handler)
     end
   end
   
