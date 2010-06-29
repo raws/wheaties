@@ -33,6 +33,8 @@ module Wheaties
         
         def broadcast_message(command, message, recipients)
           case message
+          when NilClass, FalseClass
+            return
           when String
             lines = message.split(/[\r\n]/)
           when Array
@@ -40,7 +42,7 @@ module Wheaties
               line.to_s.split(/[\r\n]/)
             end.flatten
           else
-            return
+            lines = [message.to_s]
           end
           
           # Split long lines, respecting word wrapping and text formatting.
