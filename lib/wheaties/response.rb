@@ -53,7 +53,7 @@ module Wheaties
       def modulize
         module_name = "On#{command.capitalize}"
         if ResponseTypes.const_defined?(module_name)
-          self.class.class_eval { include ResponseTypes.const_get(module_name) }
+          extend ResponseTypes.const_get(module_name)
         end
       end
       
