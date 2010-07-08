@@ -19,6 +19,10 @@ module Wheaties
       :"on_#{command.downcase}"
     end
     
+    def from
+      sender.nick
+    end
+    
     protected
       def parse
         source = line.dup
