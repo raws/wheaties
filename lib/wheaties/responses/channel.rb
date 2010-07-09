@@ -42,7 +42,13 @@ module Wheaties
                                    :user => user,
                                    :host => host,
                                    :modes => modes)
-        Wheaties::Channel.find_or_create(channel) << user
+        Wheaties::Channel.find_or_create(channel).new_users << user
+      end
+      
+      # RPL_ENDOFWHO
+      def on_315
+        channel = response.args.first
+        Wheaties::Channel.find_or_create(channel).flush!
       end
     end
   end

@@ -2,23 +2,27 @@ module Wheaties
   class Channel
     include Comparable
     
-    attr_reader :name, :users
+    attr_reader :name, :users, :new_users
     
     def initialize(name)
       @name = name
-      @users = Set.new
+      @users, @new_users = Set.new, Set.new
     end
     
     def <<(other)
       if other.is_a?(User)
-        @users << other
+        users << other
       elsif other.is_a?(Array)
-        @users += other
+        users += other
       end
     end
     
     def delete(user)
-      @users.delete(user)
+      users.delete(user)
+    end
+    
+    def flush!
+      users.replace(new_users)
     end
     
     def <=>(other)
