@@ -9,8 +9,12 @@ module Wheaties
       @users = Set.new
     end
     
-    def <<(user)
-      @users << user
+    def <<(other)
+      if other.is_a?(User)
+        @users << other
+      elsif other.is_a?(Array)
+        @users += other
+      end
     end
     
     def delete(user)
