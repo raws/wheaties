@@ -27,11 +27,11 @@ module Wheaties
         end
         
         def broadcast_ctcp(recipient, command, *args)
-          max_length = max_length(:privmsg, recipient) - (3 + command.to_s.length)
-          broadcast(:privmsg, recipient, :text => ctcp_message(command, *args))
+          broadcast(:privmsg, recipient, :text => ctcp_message(recipient, command, *args))
         end
         
-        def ctcp_message(command, *args)
+        def ctcp_message(recipient, command, *args)
+          max_length = max_length(:privmsg, recipient) - (3 + command.to_s.length)
           "\001#{command.to_s.upcase} #{args.join(" ")[0, max_length]}\001"
         end
         
