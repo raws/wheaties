@@ -39,13 +39,20 @@ module Wheaties
       }
       
       def color(fore, back = nil, text = nil)
+        return unless [Symbol, String].include?(fore.class)
         fore = fore.to_sym
-        back = back.to_sym if back
         fore = :black unless COLORS.include?(fore)
-        back = :white if back && !COLORS.include?(back)
-        result = "#{COLOR}#{COLORS[fore]}#{back.nil? ? "" : ("," + COLORS[back])}"
-        result += text + uncolor
-        result
+        
+        colored = "#{COLOR}#{COLORS[fore]}"
+        
+        if back && [Symbol, String].include?(back.class)
+          return if back.is_a?(String) && back.empty?
+          back = back.to_sym
+          colored << ",#{COLORS[back]}" if COLORS.include?(back)
+        end
+        
+        colored << "#{text}#{uncolor}" if text.is_a?(String) && !text.empty?
+        colored
       end
       alias_method :c, :color
       
