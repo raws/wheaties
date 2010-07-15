@@ -40,11 +40,11 @@ module Wheaties
       
       def color(fore, back = nil, text = nil)
         fore = fore.to_sym
-        back = back.to_sym if back && !back.empty?
+        back = back.to_sym if back
         fore = :black unless COLORS.include?(fore)
-        back = :white unless back.nil? || back.empty? || COLORS.include?(back)
-        result = "#{COLOR}#{COLORS[fore]}#{back.nil? || back.empty? ? "" : ("," + COLORS[back])}"
-        result += text + uncolor unless text.nil? || text.empty?
+        back = :white if back && !COLORS.include?(back)
+        result = "#{COLOR}#{COLORS[fore]}#{back.nil? ? "" : ("," + COLORS[back])}"
+        result += text + uncolor
         result
       end
       alias_method :c, :color
