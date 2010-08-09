@@ -55,6 +55,7 @@ module Wheaties
         colored
       end
       alias_method :c, :color
+      alias_method :co, :color
       
       def uncolor(text = nil)
         if text.nil? || text.empty?
