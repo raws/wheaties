@@ -15,6 +15,7 @@ module Wheaties
     end
     
     def load_root
+      return if root?
       if root = ENV["WHEATIES_ROOT"]
         Wheaties.root = Pathname.new(File.expand_path(root))
       else
@@ -49,6 +50,11 @@ module Wheaties
     def unregister(handler)
       Wheaties.handlers.delete(handler)
     end
+    
+    protected
+      def root?
+        Wheaties.root.is_a?(Pathname)
+      end
   end
   
   self.lib = Pathname.new(File.dirname(__FILE__) + "/..")

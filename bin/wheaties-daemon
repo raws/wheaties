@@ -45,6 +45,7 @@ module Wheaties
 end
 
 require File.dirname(__FILE__) + "/../lib/wheaties/boot"
+Wheaties.root = Pathname.new(File.expand_path(ARGV[1])) if ARGV[1]
 Wheaties.start
 
 case command = ARGV[0]
@@ -56,6 +57,6 @@ when "restart"
   Wheaties::Daemon.stop
   Wheaties::Daemon.start
 else
-  $stderr.puts "usage: wheaties daemon <start | stop | restart>"
+  $stderr.puts "usage: wheaties daemon <start | stop | restart> [wheaties_root]"
   exit 1
 end
