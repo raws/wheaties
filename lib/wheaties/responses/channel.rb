@@ -25,6 +25,11 @@ module Wheaties
         end
       end
       
+      def on_quit
+        user = User.find_or_create(response.sender)
+        user.delete! if user
+      end
+      
       def on_nick
         user = User.find(:nick => response.old_nick)
         user.nick = response.new_nick if user

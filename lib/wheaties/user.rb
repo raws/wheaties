@@ -1,6 +1,7 @@
 module Wheaties
   class User
     include Comparable
+    include Concerns::Logging
     
     attr_reader :hostmask, :modes
     
@@ -30,6 +31,12 @@ module Wheaties
     
     def host
       hostmask.host
+    end
+    
+    def delete!
+      Channel.all.each do |channel|
+        channel.delete(self)
+      end
     end
     
     def <=>(other)
