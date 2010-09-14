@@ -41,7 +41,7 @@ module Wheaties
         nick = response.args[4]
         user = response.args[1]
         host = response.args[2]
-        modes = response.args[5][/^([GH])(.*)$/, 2].split("")
+        modes = (response.args[5][/^([GH])(.*)$/, 2] || "").split("")
         # real = response.args[6][/^[0-9] +(.*)$/, 1]
         user = User.find_or_create(:nick => nick,
                                    :user => user,
