@@ -38,6 +38,8 @@ module Wheaties
         :silver => "15"
       }
       
+      ANY_FORMATTING = /(?:[#{PLAIN}#{BOLD}#{ITALIC}#{UNDERLINE}]+|#{COLOR}\d{1,2})+/
+      
       def color(fore, back = nil, text = nil)
         return unless [Symbol, String].include?(fore.class)
         fore = fore.to_sym
@@ -100,5 +102,15 @@ module Wheaties
       end
       alias_method :u, :underline
     end
+  end
+end
+
+class String
+  def unformat
+    gsub Wheaties::Concerns::Formatting::ANY_FORMATTING, ""
+  end
+  
+  def unformat!
+    replace unformat
   end
 end
