@@ -44,7 +44,7 @@ module Wheaties
   end # Daemon
 end
 
-require "wheaties/boot"
+require File.dirname(__FILE__) + "/../lib/wheaties/boot"
 Wheaties.root = Pathname.new(File.expand_path(ARGV[1])) if ARGV[1]
 Wheaties.start
 
