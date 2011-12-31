@@ -20,7 +20,7 @@ module Wheaties
     end
     
     def from
-      sender.nick
+      sender.nick if sender
     end
     
     protected
