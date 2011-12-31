@@ -1,5 +1,3 @@
-$KCODE = "UTF8"
-
 require "pathname"
 require "logger"
 require "yaml"
