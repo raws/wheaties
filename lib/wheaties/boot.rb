@@ -7,38 +7,48 @@ module Wheaties
     attr_accessor :lib, :root, :config, :handlers
     
     def start
-      load_root
+      raise LoadError, "please specify WHEATIES_ROOT" unless Wheaties.root
       load_defaults
       load_application
     end
     
+    def stop
+      if connection = Connection.instance
+        connection.broadcast("QUIT", :text => config["quit"] || "")
+        EventMachine.add_timer(5) { EventMachine.stop_event_loop }
+      else
+        EventMachine.stop_event_loop
+        Wheaties.logger.info "Wheaties stopped"
+      end
+    end
+    
     def load_root
-      return if root?
       if root = ENV["WHEATIES_ROOT"]
         Wheaties.root = Pathname.new(File.expand_path(root))
       else
-        dir = Pathname.new(Dir.pwd)
-        dir = dir.parent while dir != dir.parent && dir.basename.to_s !~ /\.wheaties$/
-        raise LoadError, "please specify WHEATIES_ROOT" if dir == dir.parent
-        Wheaties.root = dir
+        Wheaties.root = find_application_root_from(Dir.pwd)
       end
     end
     
     def load_defaults
-      config_path = Wheaties.root.join("config/irc.yml")
-      Wheaties.config = YAML.load_file(config_path) || {}
-      
-      log_path = Wheaties.root.join("log/wheaties.log")
+      log_path = Wheaties.root.join("log", "wheaties.log")
       Wheaties.logger = Logger.new(log_path)
       Wheaties.logger.datetime_format = "%Y-%m-%d %H:%M:%S"
-      Wheaties.logger.level = Logger.const_get((Wheaties.config["log"] || "info").upcase)
+      
+      config_path = Wheaties.root.join("config", "irc.yml")
+      Wheaties.config = YAML.load_file(config_path) || {}
     end
     
     def load_application
       Wheaties.handlers = []
-      
       $:.unshift Wheaties.root.join("lib")
       load Wheaties.root.join("init.rb")
+    end
+    
+    def find_application_root_from(working_directory)
+      dir = Pathname.new(working_directory)
+      dir = dir.parent while dir != dir.parent && dir.basename.to_s !~ /\.wheaties$/i
+      dir == dir.parent ? nil : dir
     end
     
     def register(handler)
@@ -48,16 +58,11 @@ module Wheaties
     def unregister(handler)
       Wheaties.handlers.delete(handler)
     end
-    
-    protected
-      def root?
-        Wheaties.root.is_a?(Pathname)
-      end
   end
-  
-  self.lib = Pathname.new(File.dirname(__FILE__) + "/..")
 end
 
+Wheaties.lib = Pathname.new(File.expand_path(File.join(File.dirname(__FILE__), "..")))
+Wheaties.load_root
 $:.unshift Wheaties.lib
 
 begin
