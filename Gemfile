@@ -1,1 +1,2 @@
-gem "eventmachine"
+source 'https://rubygems.org'
+gemspec

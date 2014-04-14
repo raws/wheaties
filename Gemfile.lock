@@ -1,9 +1,16 @@
-GEM
+PATH
+  remote: .
   specs:
-    eventmachine (0.12.10)
+    wheaties (1.0.0)
+      eventmachine (~> 1.0, >= 1.0.3)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    eventmachine (1.0.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  eventmachine
+  wheaties!
